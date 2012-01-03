@@ -7,32 +7,11 @@
  */
 
 (function($) {
-    /*
-    var render = {
-        $selectListItemTemplate: $(
-            "<li>" +
-                "<span></span>" +
-                "<input type='image'>" +
-            "</li>"),
-
-        addOptionToList: function($option, $list) {
-            render.$selectListItemTemplate.clone()
-                .attr("data-value", $option.val())
-                .find("span").text($option.text()).end()
-                .find("input")
-                    .attr("name", $select.attr(name) + "-delete")
-                    .val($option.val())
-                .end()
-                .appendTo($list);
-        },
-
-        bindSelectToList: function($select, $list) {
-            $select.children(":selected").each(function() {
-                render.addOptionToList($option, $(this));
-            });
-        }
-    };
-    */
+    var $selectListItemTemplate = $(
+        "<li>" +
+            "<span></span>" +
+            "<input type='image'>" +
+        "</li>");
 
     $.fn.neatList = function(options) {
         var options = $.extend({
@@ -48,6 +27,7 @@
                     .insertBefore($baseInput)
                     .children().removeAttr("selected").end()
                     .removeAttr("size")
+                    .removeAttr("multiple")
                     .show();
 
             if (options.caption) {
@@ -55,6 +35,32 @@
             }
 
             $addInput.prop("selectedIndex", 0);
+
+            var addOptionToSelected = function($option) {
+                var alreadySelected = $selectedList.children().is("li[data-value=" + $option.val() + "]");
+
+                if (alreadySelected)
+                    return;
+
+                $selectListItemTemplate.clone()
+                    .attr("data-value", $option.val())
+                    .find("span").text($option.text()).end()
+                    .find("input")
+                        .val($option.val())
+                    .end()
+                    .appendTo($selectedList);
+            };
+
+            $baseInput.children("option:selected").each(function() {
+                var $option = $(this);
+
+                addOptionToSelected($option);
+            });
+
+            $addInput.change(function() {
+                addOptionToSelected($(this).children(":selected"));
+                $(this).prop("selectedIndex", 0);
+            });
 
             result.push($addInput.get(0));
         });
