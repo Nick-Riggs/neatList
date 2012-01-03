@@ -37,6 +37,8 @@
             $addInput.prop("selectedIndex", 0);
 
             var addOptionToSelected = function($option) {
+                $baseInput.children("option[value=" + $option.val() + "]").prop("selected", true);
+
                 var alreadySelected = $selectedList.children().is("li[data-value=" + $option.val() + "]");
 
                 if (alreadySelected)
@@ -51,6 +53,12 @@
                     .appendTo($selectedList);
             };
 
+            var removeItemFromSelected = function ($listItem) {
+                $baseInput.children("option[value=" + $listItem.attr("data-value") + "]").prop("selected", false);
+
+                $listItem.remove();
+            };
+
             $baseInput.children("option:selected").each(function() {
                 var $option = $(this);
 
@@ -60,6 +68,10 @@
             $addInput.change(function() {
                 addOptionToSelected($(this).children(":selected"));
                 $(this).prop("selectedIndex", 0);
+            });
+
+            $selectedList.delegate("li > input", "click", function() {
+                removeItemFromSelected($(this).parents("li"));
             });
 
             result.push($addInput.get(0));

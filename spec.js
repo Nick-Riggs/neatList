@@ -45,6 +45,15 @@ describe("neatList", function() {
         expect($selected.children("[data-value=3]").length).toEqual(1);
     });
 
+    it("should mark the backing original list item to selected when selected from the drop down", function() {
+        var $list = $original.neatList();
+
+        $list.children("[value=3]").prop("selected", true);
+        $list.trigger("change");
+
+        expect($original.children("[value=3]").prop("selected")).toEqual(true);
+    });
+
     it("should not add an item if the item is already selected", function() {
         var $list = $original.neatList();
         var $selected = $list.siblings("ul");
@@ -55,5 +64,24 @@ describe("neatList", function() {
         $list.trigger("change");
 
         expect($selected.children("[data-value=2]").length).toEqual(1);
+    });
+
+    it("should mark the backing original list item as not selected with the delete button is clicked", function() {
+        var $list = $original.neatList();
+        var $listItem = $list.siblings("ul").children("li[data-value=2]");
+
+        $listItem.find("input").trigger("click");
+
+        expect($original.children("[value=2]").prop("selected")).toEqual(false);
+    });
+
+    it("should remove the item from the selected list when the delete button is clicked", function() {
+        var $list = $original.neatList();
+        var $selected = $list.siblings("ul")
+        var $listItem = $selected.children("li[data-value=2]");
+
+        $listItem.find("input").trigger("click");
+
+        expect($selected.children("li[data-value=2]").length).toEqual(0);
     });
 });
