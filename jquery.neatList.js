@@ -22,7 +22,7 @@
 
         $(this).each(function() {
             var $baseInput = $(this).hide(),
-                $selectedList = $("<ul></ul>").insertBefore($baseInput),
+                $selectedList = $("<ul class='neatList'></ul>").insertBefore($baseInput),
                 $addInput = $baseInput.clone()
                     .insertBefore($baseInput)
                     .children().removeAttr("selected").end()
