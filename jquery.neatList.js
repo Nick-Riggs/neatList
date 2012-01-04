@@ -40,7 +40,7 @@
             .find("input").val($option.val()).attr("src", deleteSrc).end()
             .appendTo($list);
         
-        toggleListDisplay();
+        toggleListDisplay($list);
 
         animate ? $item.slideDown() : $item.show();
     }
@@ -53,7 +53,7 @@
     function deselectListItem($listItem, $backingSelect, animate) {
         animate ? $listItem.slideUp(function() { $listItem.remove(); }) : $listItem.remove();
         $backingSelect.children("[value=" + $listItem.attr("data-value") + "]").removeAttr("selected");
-        toggleListDisplay();
+        toggleListDisplay($listItem.parents("ul"));
     }
 
     $.fn.neatList = function(options) {
