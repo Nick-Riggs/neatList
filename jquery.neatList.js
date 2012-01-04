@@ -11,16 +11,16 @@
             .prop("selectedIndex", 0);
     }
 
-    function initSelectedList($list, $backingSelect) {
+    function initSelectedList($list, $backingSelect, deleteSrc) {
         $list.children().remove(); //clear existing items
 
         //create a new list item for each selected backing list item
         $backingSelect.children(":selected").each(function() {
-            addListItemFromOption($list, $(this));
+            addListItemFromOption($list, $(this), deleteSrc);
         });
     }
 
-    function addListItemFromOption($list, $option, animate) {
+    function addListItemFromOption($list, $option, animate, deleteSrc) {
         //check to see if the item already exist
         if ($list.children().is("[data-value=" + $option.val() + "]"))
             return;
@@ -30,14 +30,14 @@
             .hide()
             .attr("data-value", $option.val())
             .find("span").text($option.text()).end()
-            .find("input").val($option.val()).end()
+            .find("input").val($option.val()).attr("src", deleteSrc).end()
             .appendTo($list);
 
         animate ? $item.slideDown() : $item.show();
     }
 
-    function selectOption($option, $selectedList, $backingSelect, animate) {
-        addListItemFromOption($selectedList, $option, animate);
+    function selectOption($option, $selectedList, $backingSelect, animate, deleteSource) {
+        addListItemFromOption($selectedList, $option, animate, deleteSource);
         $backingSelect.children("[value=" + $option.val() + "]").attr("selected", "selected")
     }
 
@@ -52,7 +52,8 @@
             return $(this).data("methods")[options]();
 
         var options = $.extend({
-            animate: true
+            animate: true,
+            deleteButtonSrc: ""
         }, options)
 
         return $(this).each(function() {
@@ -63,7 +64,7 @@
                 $addSelect = $("<select />").appendTo($containerDiv);
 
             $addSelect.change(function() {
-                selectOption($(this).children("option:selected"), $selectedList, $backingSelect, options.animate);
+                selectOption($(this).children("option:selected"), $selectedList, $backingSelect, options.animate, options.deleteButtonSrc);
                 $(this).prop("selectedIndex", 0);
             });
 
@@ -81,7 +82,7 @@
                         init = true;
                         initBackingSelect($backingSelect);
                         initAddSelect($addSelect, $backingSelect);
-                        initSelectedList($selectedList, $backingSelect);
+                        initSelectedList($selectedList, $backingSelect, options.deleteButtonSrc);
                     };
 
                     if (options.animate && init) {
