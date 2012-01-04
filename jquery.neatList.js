@@ -67,7 +67,8 @@
                 $(this).prop("selectedIndex", 0);
             });
 
-            $selectedList.delegate("li > input", "click", function() {
+            $selectedList.delegate("li > input", "click", function(e) {
+                e.preventDefault();
                 deselectListItem($(this).parents("li"), $backingSelect, options.animate);
             });
 
