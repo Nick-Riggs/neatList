@@ -58,7 +58,7 @@
         return $(this).each(function() {
             //create supporting dom elements
             var $backingSelect = $(this),
-                $containerDiv = $("<div />").insertBefore($backingSelect).append($backingSelect),
+                $containerDiv = $("<div />").addClass("neatList").insertBefore($backingSelect).append($backingSelect),
                 $selectedList = $("<ul />").appendTo($containerDiv),
                 $addSelect = $("<select />").appendTo($containerDiv);
 
