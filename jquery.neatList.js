@@ -1,4 +1,4 @@
-(function($) {
+(function ($) {
     function toggleListDisplay($list) {
         if ($list.children().length)
             $list.show();
@@ -22,7 +22,7 @@
         $list.children().remove(); //clear existing items
 
         //create a new list item for each selected backing list item
-        $backingSelect.children(":selected").each(function() {
+        $backingSelect.children(":selected").each(function () {
             addListItemFromOption($list, $(this), deleteSrc);
         });
 
@@ -41,7 +41,7 @@
             .find("span").text($option.text()).end()
             .find("input").val($option.val()).attr("src", deleteSrc).end()
             .appendTo($list);
-        
+
         toggleListDisplay($list);
 
         animate ? $item.slideDown() : $item.show();
@@ -53,34 +53,38 @@
     }
 
     function deselectListItem($listItem, $backingSelect, animate) {
-        animate ? $listItem.slideUp(function() { $listItem.remove(); }) : $listItem.remove();
+        var removeListWork = function () {
+            var $list = $listItem.parents("ul");
+            $listItem.remove();
+            toggleListDisplay($list);
+        };
+        animate ? $listItem.slideUp(function() { removeListWork(); }) : removeListWork();
         $backingSelect.children("[value=" + $listItem.attr("data-value") + "]").removeAttr("selected");
-        toggleListDisplay($listItem.parents("ul"));
     }
 
-    $.fn.neatList = function(options) {
+    $.fn.neatList = function (options) {
         //call a public method if a string is passed
-        if (typeof(options) === "string")
+        if (typeof (options) === "string")
             return $(this).data("methods")[options]();
 
         var options = $.extend({
             animate: true,
             deleteButtonSrc: ""
-        }, options)
+        }, options);
 
-        return $(this).each(function() {
+        return $(this).each(function () {
             //create supporting dom elements
             var $backingSelect = $(this),
                 $containerDiv = $("<div />").addClass("neatList").insertBefore($backingSelect).append($backingSelect),
                 $selectedList = $("<ul />").appendTo($containerDiv),
                 $addSelect = $("<select />").appendTo($containerDiv);
 
-            $addSelect.change(function() {
+            $addSelect.change(function () {
                 selectOption($(this).children("option:selected"), $selectedList, $backingSelect, options.animate, options.deleteButtonSrc);
                 $(this).prop("selectedIndex", 0);
             });
 
-            $selectedList.delegate("li > input", "click", function(e) {
+            $selectedList.delegate("li > input", "click", function (e) {
                 e.preventDefault();
                 deselectListItem($(this).parents("li"), $backingSelect, options.animate);
             });
@@ -89,8 +93,8 @@
 
             //public methods
             var methods = {
-                refresh: function() {
-                    var work = function() {
+                refresh: function () {
+                    var work = function () {
                         init = true;
                         initBackingSelect($backingSelect);
                         initAddSelect($addSelect, $backingSelect);
@@ -98,7 +102,7 @@
                     };
 
                     if (options.animate && init) {
-                        $containerDiv.fadeOut(function() {
+                        $containerDiv.fadeOut(function () {
                             work();
                             $containerDiv.fadeIn();
                         });
