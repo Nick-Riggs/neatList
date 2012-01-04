@@ -58,7 +58,7 @@
             $listItem.remove();
             toggleListDisplay($list);
         };
-        animate ? $listItem.slideUp(function() { removeListWork(); }) : removeListWork();
+        animate ? $listItem.slideUp(function () { removeListWork(); }) : removeListWork();
         $backingSelect.children("[value=" + $listItem.attr("data-value") + "]").removeAttr("selected");
     }
 
@@ -82,11 +82,13 @@
             $addSelect.change(function () {
                 selectOption($(this).children("option:selected"), $selectedList, $backingSelect, options.animate, options.deleteButtonSrc);
                 $(this).prop("selectedIndex", 0);
+                $backingSelect.trigger("change");
             });
 
             $selectedList.delegate("li > input", "click", function (e) {
                 e.preventDefault();
                 deselectListItem($(this).parents("li"), $backingSelect, options.animate);
+                $backingSelect.trigger("change");
             });
 
             var init = false;
