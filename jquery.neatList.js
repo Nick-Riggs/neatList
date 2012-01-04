@@ -25,6 +25,8 @@
         $backingSelect.children(":selected").each(function() {
             addListItemFromOption($list, $(this), deleteSrc);
         });
+
+        toggleListDisplay($list);
     }
 
     function addListItemFromOption($list, $option, animate, deleteSrc) {
