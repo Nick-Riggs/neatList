@@ -1,4 +1,11 @@
 (function($) {
+    function toggleListDisplay($list) {
+        if ($list.children().length)
+            $list.show();
+        else
+            $list.hide();
+    }
+
     function initBackingSelect($select) {
         $select.hide();
     }
@@ -32,6 +39,8 @@
             .find("span").text($option.text()).end()
             .find("input").val($option.val()).attr("src", deleteSrc).end()
             .appendTo($list);
+        
+        toggleListDisplay();
 
         animate ? $item.slideDown() : $item.show();
     }
@@ -43,7 +52,8 @@
 
     function deselectListItem($listItem, $backingSelect, animate) {
         animate ? $listItem.slideUp(function() { $listItem.remove(); }) : $listItem.remove();
-        $backingSelect.children("[value=" + $listItem.attr("data-value") + "]").removeAttr("selected")
+        $backingSelect.children("[value=" + $listItem.attr("data-value") + "]").removeAttr("selected");
+        toggleListDisplay();
     }
 
     $.fn.neatList = function(options) {
